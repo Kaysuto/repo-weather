@@ -44,6 +44,7 @@ const TEXT = {
     ci: { passing: 'CI ok', failing: 'CI en échec', none: 'pas de CI' },
     issues: (n) => `${n} issue${n > 1 ? 's' : ''}`,
     blocked: (n) => `${n} PR bloquée${n > 1 ? 's' : ''}`,
+    commit: (state) => `chore: météo du dépôt, ${state.toLowerCase()} [skip ci]`,
   },
   en: {
     title: 'Repo weather',
@@ -51,10 +52,16 @@ const TEXT = {
     ci: { passing: 'CI passing', failing: 'CI failing', none: 'no CI' },
     issues: (n) => `${n} issue${n === 1 ? '' : 's'}`,
     blocked: (n) => `${n} blocked PR${n === 1 ? '' : 's'}`,
+    commit: (state) => `chore: repo weather, ${state.toLowerCase()} [skip ci]`,
   },
 };
 
 export const LANGS = Object.keys(TEXT);
+
+export function commitMessage(weather, lang = 'fr') {
+  const t = TEXT[lang];
+  return t.commit(t.weather[weather]);
+}
 
 const CLOUD = 'M14 34h22a8 8 0 0 0 0-16 11 11 0 0 0-21-2 7 7 0 0 0-1 18z';
 

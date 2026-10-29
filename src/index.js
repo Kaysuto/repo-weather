@@ -1,7 +1,7 @@
 import { appendFileSync } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname } from 'node:path';
-import { LANGS, ciState, countBlocked, pickWeather, renderSvg } from './weather.js';
+import { LANGS, ciState, commitMessage, countBlocked, pickWeather, renderSvg } from './weather.js';
 
 const input = (name, fallback) => process.env[`INPUT_${name.toUpperCase()}`]?.trim() || fallback;
 
@@ -88,7 +88,7 @@ async function main() {
   }
   await gh(file, {
     method: 'PUT',
-    body: JSON.stringify({ message: `chore: repo weather ${weather} [skip ci]`, content, branch, sha: current?.sha }),
+    body: JSON.stringify({ message: commitMessage(weather, lang), content, branch, sha: current?.sha }),
   });
   console.log(`Committed ${path} on ${branch}`);
 }

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { ciState, countBlocked, pickWeather, renderSvg } from '../src/weather.js';
+import { ciState, commitMessage, countBlocked, pickWeather, renderSvg } from '../src/weather.js';
 
 const run = (workflow_id, conclusion, status = 'completed') => ({ workflow_id, conclusion, status });
 
@@ -45,4 +45,9 @@ test('renderSvg: labels, plurals and languages', () => {
   assert.match(svg, /CI en échec · 1 issue · 2 PR bloquées/);
   assert.match(renderSvg('sunny', { ci: 'passing', issues: 0, blocked: 0 }, 'en'), /CI passing · 0 issues · 0 blocked PRs/);
   assert.throws(() => renderSvg('sunny', { ci: 'none', issues: 0, blocked: 0 }, 'de'), /Unknown lang/);
+});
+
+test('commitMessage: follows the badge language', () => {
+  assert.equal(commitMessage('stormy'), 'chore: météo du dépôt, orageux [skip ci]');
+  assert.equal(commitMessage('sunny', 'en'), 'chore: repo weather, sunny [skip ci]');
 });
