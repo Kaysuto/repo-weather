@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="279" height="66" viewBox="0 0 279 66" role="img" aria-label="Météo du dépôt : Nuageux — CI ok · 4 issues · 0 PR bloquée">
+<title>Météo du dépôt : Nuageux — CI ok · 4 issues · 0 PR bloquée</title>
+<style>
+.bg{fill:#fff;stroke:#d0d7de}.t{fill:#59636e}.s{fill:#1f2328}
+.sun{fill:#f5a623}.ray{stroke:#f5a623;stroke-width:2.5;stroke-linecap:round}
+.cloud{fill:#b6c2cf}.storm{fill:#6e7681}.rain{stroke:#3b82f6;stroke-width:2.5;stroke-linecap:round}.bolt{fill:#f5c400}
+@media (prefers-color-scheme:dark){.bg{fill:#0d1117;stroke:#30363d}.t{fill:#9198a1}.s{fill:#f0f6fc}.cloud{fill:#8b949e}.storm{fill:#484f58}}
+</style>
+<rect class="bg" x="0.5" y="0.5" width="278" height="65" rx="8"/>
+<g transform="translate(8 8)"><path class="cloud" d="M14 34h22a8 8 0 0 0 0-16 11 11 0 0 0-21-2 7 7 0 0 0-1 18z"/></g>
+<g font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif">
+<text class="t" x="64" y="18" font-size="11">Météo du dépôt</text>
+<text class="s" x="64" y="37" font-size="16" font-weight="600">Nuageux</text>
+<text class="t" x="64" y="54" font-size="11">CI ok · 4 issues · 0 PR bloquée</text>
+</g>
+</svg>

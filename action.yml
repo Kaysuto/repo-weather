@@ -1,0 +1,39 @@
+name: Repo Weather
+description: Badge SVG « météo » du dépôt — soleil, nuages, pluie ou orage selon la CI, les issues et les PR bloquées.
+author: Kaysuto
+branding:
+  icon: sun
+  color: yellow
+
+inputs:
+  token:
+    description: Jeton GitHub (lecture des issues, PR et runs ; écriture du badge si commit est activé).
+    default: ${{ github.token }}
+  path:
+    description: Chemin du badge SVG dans le dépôt.
+    default: .github/repo-weather.svg
+  stale-days:
+    description: Jours sans activité après lesquels une PR ouverte compte comme bloquée.
+    default: '14'
+  issues-threshold:
+    description: Nombre d'issues ouvertes tolérées avant de passer au temps nuageux.
+    default: '0'
+  lang:
+    description: Langue du badge (fr ou en).
+    default: fr
+  commit:
+    description: Committer le badge dans le dépôt (true) ou seulement écrire le fichier (false).
+    default: 'true'
+  branch:
+    description: Branche où committer le badge (par défaut, la branche par défaut du dépôt).
+    required: false
+
+outputs:
+  weather:
+    description: Météo calculée (sunny, cloudy, rainy ou stormy).
+  path:
+    description: Chemin du fichier SVG généré.
+
+runs:
+  using: node24
+  main: src/index.js

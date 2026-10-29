@@ -1,0 +1,15 @@
+{
+  "name": "repo-weather",
+  "version": "1.0.0",
+  "private": true,
+  "description": "GitHub Action that turns a repository's health into a weather badge.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "test": "node --test",
+    "examples": "node scripts/examples.js"
+  }
+}
