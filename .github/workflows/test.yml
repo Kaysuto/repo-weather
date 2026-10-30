@@ -17,4 +17,6 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 24
+      - name: Valider action.yml
+        run: python3 -c "import yaml; yaml.safe_load(open('action.yml', encoding='utf-8'))"
       - run: npm test

@@ -50,7 +50,7 @@ outputs:
   weather:
     description: Météo calculée (sunny, cloudy, rainy ou stormy).
   phrase:
-    description: Bulletin en une ligne, par exemple « Orageux : 2 PR bloquées ».
+    description: "Bulletin en une ligne, par exemple « Orageux : 2 PR bloquées »."
   path:
     description: Chemin du fichier SVG généré.
   changed:
