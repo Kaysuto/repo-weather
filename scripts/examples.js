@@ -13,4 +13,4 @@ await mkdir('examples', { recursive: true });
 for (const [weather, stats] of Object.entries(samples)) {
   await writeFile(`examples/${weather}.svg`, renderSvg(weather, stats));
 }
-console.log(`Wrote ${Object.keys(samples).length} badges to examples/`);
+console.log(`${Object.keys(samples).length} badges écrits dans examples/`);

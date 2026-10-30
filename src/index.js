@@ -7,7 +7,7 @@ const input = (name, fallback) => process.env[`INPUT_${name.toUpperCase()}`]?.tr
 
 function number(name, fallback) {
   const value = Number(input(name, fallback));
-  if (!Number.isFinite(value) || value < 0) throw new Error(`Input "${name}" must be a positive number`);
+  if (!Number.isFinite(value) || value < 0) throw new Error(`Le paramètre "${name}" doit être un nombre positif ou nul`);
   return value;
 }
 
@@ -44,8 +44,8 @@ const QUERY = `query($owner: String!, $name: String!) {
 }`;
 
 async function main() {
-  if (!token) throw new Error('Input "token" is empty');
-  if (!LANGS.includes(lang)) throw new Error(`Input "lang" must be one of: ${LANGS.join(', ')}`);
+  if (!token) throw new Error('Le paramètre "token" est vide');
+  if (!LANGS.includes(lang)) throw new Error(`Le paramètre "lang" doit valoir : ${LANGS.join(', ')}`);
 
   const { data, errors } = await gh(process.env.GITHUB_GRAPHQL_URL ?? `${api}/graphql`, {
     method: 'POST',
@@ -54,7 +54,7 @@ async function main() {
   if (errors) throw new Error(errors.map((e) => e.message).join('; '));
   const repository = data.repository;
   const defaultBranch = repository.defaultBranchRef?.name;
-  if (!defaultBranch) throw new Error('Repository has no default branch yet (empty repository?)');
+  if (!defaultBranch) throw new Error("Le dépôt n'a pas encore de branche par défaut (dépôt vide ?)");
 
   const { workflow_runs: runs } = await gh(
     `/repos/${owner}/${repo}/actions/runs?branch=${encodeURIComponent(defaultBranch)}&exclude_pull_requests=true&per_page=100`,
@@ -71,7 +71,7 @@ async function main() {
   };
   const weather = pickWeather(stats, issuesThreshold);
   const svg = renderSvg(weather, stats, lang);
-  console.log(`Weather: ${weather}`, stats);
+  console.log(`Météo : ${weather}`, stats);
 
   await mkdir(dirname(path), { recursive: true });
   await writeFile(path, svg);
@@ -83,14 +83,14 @@ async function main() {
   const current = await gh(`${file}?ref=${encodeURIComponent(branch)}`, { allow404: true });
   const content = Buffer.from(svg).toString('base64');
   if (current?.content?.replace(/\n/g, '') === content) {
-    console.log('Badge unchanged, nothing to commit');
+    console.log('Badge inchangé, rien à committer');
     return;
   }
   await gh(file, {
     method: 'PUT',
     body: JSON.stringify({ message: commitMessage(weather, lang), content, branch, sha: current?.sha }),
   });
-  console.log(`Committed ${path} on ${branch}`);
+  console.log(`${path} committé sur ${branch}`);
 }
 
 main().catch((error) => {

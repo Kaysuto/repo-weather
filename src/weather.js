@@ -86,12 +86,27 @@ const ICONS = {
   stormy: () => `<path d="${CLOUD}" fill="url(#storm)"/><path class="bolt" d="M26 33l-6 9h5l-3 7 9-11h-5l3-5z"/>`,
 };
 
-// raccourci : largeurs estimées avec une largeur moyenne de caractère, passer à de vraies métriques de police si du texte est coupé.
-const textWidth = (text, size) => text.length * size * 0.58;
+// Largeur estimée à partir des métriques d'Arial/Helvetica (en em, par famille de caractères).
+// Elle sert aussi de textLength : le moteur de rendu ajuste le texte à cette largeur, quelle que soit la police réellement utilisée.
+function textWidth(text, size, bold = false) {
+  let em = 0;
+  for (const c of text) {
+    if (/[il.,:;'!|· ]/.test(c)) em += 0.28;
+    else if (/[jtfr()-]/.test(c)) em += 0.33;
+    else if (/[mwMW]/.test(c)) em += 0.83;
+    else if (/d/.test(c)) em += 0.56;
+    else if (c !== c.toLowerCase()) em += 0.67;
+    else em += 0.55;
+  }
+  return Math.ceil(em * size * (bold ? 1.08 : 1));
+}
+
+const fit = (text, size, bold, adjust = 'spacingAndGlyphs') =>
+  `textLength="${textWidth(text, size, bold)}" lengthAdjust="${adjust}"`;
 
 export function renderSvg(weather, stats, lang = 'fr') {
   const t = TEXT[lang];
-  if (!t) throw new Error(`Unknown lang "${lang}", expected one of: ${LANGS.join(', ')}`);
+  if (!t) throw new Error(`Langue inconnue "${lang}", valeurs possibles : ${LANGS.join(', ')}`);
   const state = t.weather[weather];
   const title = t.title.toUpperCase();
   const chips = [
@@ -102,13 +117,15 @@ export function renderSvg(weather, stats, lang = 'fr') {
   let x = 76;
   const chipsSvg = chips
     .map(([text, color]) => {
-      const w = Math.ceil(textWidth(text, 11) + 26);
-      const chip = `<g transform="translate(${x} 52)"><rect class="chip" x="0.5" y="0.5" width="${w - 1}" height="19" rx="9.5"/><circle cx="11" cy="10" r="3.5" fill="${color}"/><text class="t" x="20" y="14" font-size="11">${text}</text></g>`;
+      const w = textWidth(text, 11) + 26;
+      const chip = `<g transform="translate(${x} 52)"><rect class="chip" x="0.5" y="0.5" width="${w - 1}" height="19" rx="9.5"/><circle cx="11" cy="10" r="3.5" fill="${color}"/><text class="t" x="20" y="14" font-size="11" ${fit(text, 11)}>${text}</text></g>`;
       x += w + 6;
       return chip;
     })
     .join('');
-  const width = Math.ceil(Math.max(x - 6, 76 + textWidth(state, 17) + 4, 76 + textWidth(title, 10) + title.length) + 16);
+  // Le titre est espacé (0,08 em par lettre) via textLength + lengthAdjust="spacing".
+  const titleWidth = textWidth(title, 10, true) + Math.ceil(title.length * 0.8);
+  const width = Math.max(x - 6, 76 + textWidth(state, 17, true), 76 + titleWidth) + 16;
   const accent = ACCENT[weather];
   const label = `${t.title} : ${state} — ${chips.map(([text]) => text).join(' · ')}`;
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="84" viewBox="0 0 ${width} 84" role="img" aria-label="${label}">
@@ -120,7 +137,7 @@ export function renderSvg(weather, stats, lang = 'fr') {
 <linearGradient id="storm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#94a3b8"/><stop offset="1" stop-color="#475569"/></linearGradient>
 </defs>
 <style>
-.base{fill:#fff;stroke:#d0d7de}.h{fill:#6e7781;letter-spacing:.08em}.s{fill:#1f2328}.t{fill:#424a53}.chip{fill:#f6f8fa;stroke:#d0d7de}
+.base{fill:#fff;stroke:#d0d7de}.h{fill:#6e7781}.s{fill:#1f2328}.t{fill:#424a53}.chip{fill:#f6f8fa;stroke:#d0d7de}
 .ray{stroke:#f59e0b;stroke-width:2.5;stroke-linecap:round}.drop{stroke:#3b82f6;stroke-width:2.5;stroke-linecap:round}.bolt{fill:#facc15}
 .spin{transform-box:fill-box;transform-origin:center;animation:spin 24s linear infinite}
 .float{animation:float 6s ease-in-out infinite}.drop{animation:fall 1.2s linear infinite}.bolt{animation:flash 4s infinite}
@@ -136,8 +153,8 @@ export function renderSvg(weather, stats, lang = 'fr') {
 <rect x="14" y="18" width="48" height="48" rx="12" fill="${accent}" fill-opacity="0.16"/>
 <g transform="translate(20 24) scale(0.75)">${ICONS[weather]()}</g>
 <g font-family="system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
-<text class="h" x="76" y="24" font-size="10" font-weight="600">${title}</text>
-<text class="s" x="76" y="43" font-size="17" font-weight="650">${state}</text>
+<text class="h" x="76" y="24" font-size="10" font-weight="600" textLength="${titleWidth}" lengthAdjust="spacing">${title}</text>
+<text class="s" x="76" y="43" font-size="17" font-weight="650" ${fit(state, 17, true)}>${state}</text>
 ${chipsSvg}
 </g>
 </svg>
