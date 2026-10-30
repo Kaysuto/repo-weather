@@ -20,3 +20,26 @@ jobs:
       - name: Valider action.yml
         run: python3 -c "import yaml; yaml.safe_load(open('action.yml', encoding='utf-8'))"
       - run: npm test
+
+  # Lance la vraie Action, avec le jeton par défaut, sur un autre dépôt public.
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - id: weather
+        uses: ./
+        with:
+          repo: cli/cli
+          commit: 'false'
+          path: ${{ runner.temp }}/cli-weather.svg
+      - name: Vérifier les sorties
+        env:
+          WEATHER: ${{ steps.weather.outputs.weather }}
+          PHRASE: ${{ steps.weather.outputs.phrase }}
+          CHANGED: ${{ steps.weather.outputs.changed }}
+          BADGE: ${{ runner.temp }}/cli-weather.svg
+        run: |
+          echo "$PHRASE"
+          case "$WEATHER" in sunny|cloudy|rainy|stormy) ;; *) echo "Météo inattendue : $WEATHER"; exit 1 ;; esac
+          test "$CHANGED" = false
+          grep -q '^<svg ' "$BADGE"

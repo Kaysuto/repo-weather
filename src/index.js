@@ -76,6 +76,11 @@ async function main() {
     method: 'POST',
     body: JSON.stringify({ query: QUERY, variables: { owner: targetOwner, name: targetName } }),
   });
+  if (errors?.some((e) => e.type === 'NOT_FOUND')) {
+    throw new Error(
+      `Dépôt ${target} introuvable ou inaccessible avec ce jeton. Pour un dépôt privé autre que le tien, passe un jeton personnel dans "token".`,
+    );
+  }
   if (errors) throw new Error(errors.map((e) => e.message).join('; '));
   const repository = data.repository;
   const defaultBranch = repository.defaultBranchRef?.name;
