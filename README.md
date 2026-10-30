@@ -8,7 +8,7 @@ Une GitHub Action qui transforme l'état de ton dépôt en bulletin météo, sou
 | --- | --- | --- | --- |
 | ![Ensoleillé](examples/sunny.svg) | ![Nuageux](examples/cloudy.svg) | ![Pluvieux](examples/rainy.svg) | ![Orageux](examples/stormy.svg) |
 
-Le badge suit le thème clair ou sombre de GitHub.
+Le badge suit le thème clair ou sombre de GitHub. Les icônes sont légèrement animées (soleil qui tourne, pluie qui tombe, éclairs), sauf si le lecteur a demandé à réduire les animations.
 
 ## Comment la météo est calculée
 

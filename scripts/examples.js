@@ -1,4 +1,4 @@
-// Regenerates the preview badges shown in the README: npm run examples
+// Régénère les aperçus de badges affichés dans le README : npm run examples
 import { mkdir, writeFile } from 'node:fs/promises';
 import { renderSvg } from '../src/weather.js';
 

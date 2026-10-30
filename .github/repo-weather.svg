@@ -1,16 +1,30 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="272" height="66" viewBox="0 0 272 66" role="img" aria-label="Météo du dépôt : Ensoleillé — CI ok · 0 issue · 0 PR bloquée">
+<svg xmlns="http://www.w3.org/2000/svg" width="336" height="84" viewBox="0 0 336 84" role="img" aria-label="Météo du dépôt : Ensoleillé — CI ok · 0 issue · 0 PR bloquée">
 <title>Météo du dépôt : Ensoleillé — CI ok · 0 issue · 0 PR bloquée</title>
+<defs>
+<linearGradient id="tint" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f59e0b" stop-opacity="0.22"/><stop offset="0.7" stop-color="#f59e0b" stop-opacity="0"/></linearGradient>
+<radialGradient id="sun" cx="0.35" cy="0.35" r="0.75"><stop offset="0" stop-color="#fde68a"/><stop offset="1" stop-color="#f59e0b"/></radialGradient>
+<linearGradient id="cloud" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f1f5f9"/><stop offset="1" stop-color="#94a3b8"/></linearGradient>
+<linearGradient id="storm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#94a3b8"/><stop offset="1" stop-color="#475569"/></linearGradient>
+</defs>
 <style>
-.bg{fill:#fff;stroke:#d0d7de}.t{fill:#59636e}.s{fill:#1f2328}
-.sun{fill:#f5a623}.ray{stroke:#f5a623;stroke-width:2.5;stroke-linecap:round}
-.cloud{fill:#b6c2cf}.storm{fill:#6e7681}.rain{stroke:#3b82f6;stroke-width:2.5;stroke-linecap:round}.bolt{fill:#f5c400}
-@media (prefers-color-scheme:dark){.bg{fill:#0d1117;stroke:#30363d}.t{fill:#9198a1}.s{fill:#f0f6fc}.cloud{fill:#8b949e}.storm{fill:#484f58}}
+.base{fill:#fff;stroke:#d0d7de}.h{fill:#6e7781;letter-spacing:.08em}.s{fill:#1f2328}.t{fill:#424a53}.chip{fill:#f6f8fa;stroke:#d0d7de}
+.ray{stroke:#f59e0b;stroke-width:2.5;stroke-linecap:round}.drop{stroke:#3b82f6;stroke-width:2.5;stroke-linecap:round}.bolt{fill:#facc15}
+.spin{transform-box:fill-box;transform-origin:center;animation:spin 24s linear infinite}
+.float{animation:float 6s ease-in-out infinite}.drop{animation:fall 1.2s linear infinite}.bolt{animation:flash 4s infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes float{50%{transform:translateX(2px)}}
+@keyframes fall{0%{transform:translateY(-3px);opacity:0}30%{opacity:1}100%{transform:translateY(3px);opacity:0}}
+@keyframes flash{0%,86%,92%,100%{opacity:1}89%{opacity:.15}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+@media (prefers-color-scheme:dark){.base{fill:#0d1117;stroke:#30363d}.h{fill:#848d97}.s{fill:#f0f6fc}.t{fill:#c9d1d9}.chip{fill:#161b22;stroke:#30363d}}
 </style>
-<rect class="bg" x="0.5" y="0.5" width="271" height="65" rx="8"/>
-<g transform="translate(8 8)"><circle class="sun" cx="24" cy="24" r="9"/><path class="ray" d="M37.0 24.0L42.0 24.0M33.2 33.2L36.7 36.7M24.0 37.0L24.0 42.0M14.8 33.2L11.3 36.7M11.0 24.0L6.0 24.0M14.8 14.8L11.3 11.3M24.0 11.0L24.0 6.0M33.2 14.8L36.7 11.3"/></g>
-<g font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif">
-<text class="t" x="64" y="18" font-size="11">Météo du dépôt</text>
-<text class="s" x="64" y="37" font-size="16" font-weight="600">Ensoleillé</text>
-<text class="t" x="64" y="54" font-size="11">CI ok · 0 issue · 0 PR bloquée</text>
+<rect class="base" x="0.5" y="0.5" width="335" height="83" rx="14"/>
+<rect x="0.5" y="0.5" width="335" height="83" rx="14" fill="url(#tint)"/>
+<rect x="14" y="18" width="48" height="48" rx="12" fill="#f59e0b" fill-opacity="0.16"/>
+<g transform="translate(20 24) scale(0.75)"><path class="ray spin" d="M37.0 24.0L42.0 24.0M33.2 33.2L36.7 36.7M24.0 37.0L24.0 42.0M14.8 33.2L11.3 36.7M11.0 24.0L6.0 24.0M14.8 14.8L11.3 11.3M24.0 11.0L24.0 6.0M33.2 14.8L36.7 11.3"/><circle cx="24" cy="24" r="9" fill="url(#sun)"/></g>
+<g font-family="system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+<text class="h" x="76" y="24" font-size="10" font-weight="600">MÉTÉO DU DÉPÔT</text>
+<text class="s" x="76" y="43" font-size="17" font-weight="650">Ensoleillé</text>
+<g transform="translate(76 52)"><rect class="chip" x="0.5" y="0.5" width="57" height="19" rx="9.5"/><circle cx="11" cy="10" r="3.5" fill="#1f883d"/><text class="t" x="20" y="14" font-size="11">CI ok</text></g><g transform="translate(140 52)"><rect class="chip" x="0.5" y="0.5" width="70" height="19" rx="9.5"/><circle cx="11" cy="10" r="3.5" fill="#1f883d"/><text class="t" x="20" y="14" font-size="11">0 issue</text></g><g transform="translate(217 52)"><rect class="chip" x="0.5" y="0.5" width="102" height="19" rx="9.5"/><circle cx="11" cy="10" r="3.5" fill="#1f883d"/><text class="t" x="20" y="14" font-size="11">0 PR bloquée</text></g>
 </g>
 </svg>

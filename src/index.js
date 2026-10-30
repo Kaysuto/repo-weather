@@ -59,14 +59,14 @@ async function main() {
   const { workflow_runs: runs } = await gh(
     `/repos/${owner}/${repo}/actions/runs?branch=${encodeURIComponent(defaultBranch)}&exclude_pull_requests=true&per_page=100`,
   );
-  // The workflow running this action must not judge itself (it is still in progress, or it would loop on its own result).
+  // Le workflow qui exécute l'Action ne doit pas se juger lui-même : il est encore en cours, ou bouclerait sur son propre résultat.
   const ownPath = process.env.GITHUB_WORKFLOW_REF?.split('@')[0].slice(`${owner}/${repo}/`.length);
   const others = runs.filter((run) => run.path !== ownPath && String(run.id) !== process.env.GITHUB_RUN_ID);
 
   const stats = {
     ci: ciState(others),
     issues: repository.issues.totalCount,
-    // shortcut: only the 100 most recent open PRs are checked, paginate if a repo ever has more.
+    // raccourci : seules les 100 PR ouvertes les plus récentes sont examinées, paginer si un dépôt en a davantage.
     blocked: countBlocked(repository.pullRequests.nodes, staleDays, Date.now()),
   };
   const weather = pickWeather(stats, issuesThreshold);
