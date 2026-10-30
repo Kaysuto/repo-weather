@@ -4,9 +4,9 @@
 
 Une GitHub Action qui transforme l'état de ton dépôt en bulletin météo, sous forme de badge SVG à afficher dans ton README.
 
-| Ensoleillé | Nuageux | Pluvieux | Orageux |
-| --- | --- | --- | --- |
-| ![Ensoleillé](examples/sunny.svg) | ![Nuageux](examples/cloudy.svg) | ![Pluvieux](examples/rainy.svg) | ![Orageux](examples/stormy.svg) |
+![Ensoleillé](examples/sunny.svg) ![Nuageux](examples/cloudy.svg)
+
+![Pluvieux](examples/rainy.svg) ![Orageux](examples/stormy.svg)
 
 Le badge suit le thème clair ou sombre de GitHub. Les icônes sont légèrement animées (soleil qui tourne, pluie qui tombe, éclairs), sauf si le lecteur a demandé à réduire les animations.
 
