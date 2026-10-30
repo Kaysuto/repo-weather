@@ -126,7 +126,7 @@ Avec `repo: propriétaire/nom`, le badge décrit un autre dépôt mais reste com
 | Référence | Signification |
 | --- | --- |
 | `@v1` | Dernière version 1.x : ce tag avance à chaque nouvelle version |
-| `@v1.1.0` | Cette version précise. Un tag de version n'est déplacé que pour réparer une version inutilisable |
+| `@v1.1.1` | Cette version précise. Un tag de version n'est déplacé que pour réparer une version inutilisable |
 | `@<sha du commit>` | La seule référence vraiment immuable, celle que GitHub recommande pour les workflows sensibles |
 
 Ce cas est arrivé une fois : `v1.1.0` a été republiée le 30 octobre 2026, quelques minutes après sa sortie, parce que son `action.yml` était invalide et que l'Action ne démarrait pas.
