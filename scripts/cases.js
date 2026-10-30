@@ -11,4 +11,12 @@ export const CASES = [
     stats: { ci: 'failing', issues: 12, blocked: 0 },
     options: { lang: 'en', animated: false },
   },
+  { file: 'pill-sunny.svg', weather: 'sunny', stats: { ci: 'passing', issues: 0, blocked: 0 }, options: { style: 'pill' } },
+  { file: 'pill-stormy.svg', weather: 'stormy', stats: { ci: 'failing', issues: 4, blocked: 2 }, options: { style: 'pill' } },
+  {
+    file: 'pill-message.svg',
+    weather: 'cloudy',
+    stats: { ci: 'passing', issues: 7, blocked: 0 },
+    options: { style: 'pill', messages: { cloudy: '{issues} issues à trier & classer' } },
+  },
 ];

@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { test } from 'node:test';
 import { CASES } from '../scripts/cases.js';
-import { ciState, commitMessage, countBlocked, pickWeather, renderSvg } from '../src/weather.js';
+import { cause, ciState, commitMessage, countBlocked, parseMessages, phrase, pickWeather, renderSvg } from '../src/weather.js';
 
 const run = (workflow_id, conclusion, status = 'completed') => ({ workflow_id, conclusion, status });
 
@@ -145,4 +145,34 @@ test('badges de référence : identiques octet par octet (npm run examples pour 
     const expected = (await readFile(new URL(`../examples/${file}`, import.meta.url), 'utf8')).replace(/\r\n/g, '\n');
     assert.equal(renderSvg(weather, stats, options), expected, file);
   }
+});
+
+test('cause et phrase : raison par défaut, puis personnalisée', () => {
+  const stats = { ci: 'failing', issues: 3, blocked: 2 };
+  assert.equal(phrase('stormy', stats), 'Orageux : 2 PR bloquées');
+  assert.equal(phrase('rainy', stats), 'Pluvieux : CI en échec');
+  assert.equal(phrase('cloudy', stats), 'Nuageux : 3 issues');
+  assert.equal(phrase('sunny', stats, { lang: 'en' }), 'Sunny: all clear');
+  const messages = { stormy: '{blocked} PR à débloquer, {issues} issues, {ci}' };
+  assert.equal(cause('stormy', stats, { messages }), '2 PR à débloquer, 3 issues, CI en échec');
+  assert.equal(cause('rainy', stats, { messages }), 'CI en échec');
+});
+
+test('parseMessages : une ligne par météo, erreur sur une ligne invalide', () => {
+  assert.deepEqual(parseMessages('stormy: Orage !\n\n  sunny :  Beau temps  \n'), { stormy: 'Orage !', sunny: 'Beau temps' });
+  assert.deepEqual(parseMessages(''), {});
+  assert.throws(() => parseMessages('snowy: Neige'), /Ligne de "messages" invalide/);
+});
+
+test('renderSvg : pastille de 28 px, texte échappé et contenu dans la largeur', () => {
+  const stats = { ci: 'passing', issues: 7, blocked: 0 };
+  const svg = renderSvg('cloudy', stats, { style: 'pill', messages: { cloudy: '<b>{issues}</b> & "co"' } });
+  assert.match(svg, /^<svg [^>]*height="28"/);
+  assert.match(svg, />&lt;b&gt;7&lt;\/b&gt; &amp; &quot;co&quot;<\/text>/);
+  assert.doesNotMatch(svg, /<b>/);
+  const width = svgWidth(svg);
+  for (const [, x, textLength] of svg.matchAll(/<text [^>]*x="([\d.]+)"[^>]*textLength="(\d+)"/g)) {
+    assert.ok(+x + +textLength <= width - 12, 'texte dans la pastille');
+  }
+  assert.throws(() => renderSvg('cloudy', stats, { style: 'banner' }), /Style inconnu/);
 });

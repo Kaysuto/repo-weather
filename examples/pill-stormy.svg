@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="182" height="28" viewBox="0 0 182 28" role="img" aria-label="Météo du dépôt : Orageux : 2 PR bloquées">
+<title>Météo du dépôt : Orageux : 2 PR bloquées</title>
+<defs>
+<linearGradient id="tint" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8b5cf6" stop-opacity="0.22"/><stop offset="0.7" stop-color="#8b5cf6" stop-opacity="0"/></linearGradient>
+<radialGradient id="sun" cx="0.35" cy="0.35" r="0.75"><stop offset="0" stop-color="#fde68a"/><stop offset="1" stop-color="#f59e0b"/></radialGradient>
+<linearGradient id="cloud" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f1f5f9"/><stop offset="1" stop-color="#94a3b8"/></linearGradient>
+<linearGradient id="storm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#94a3b8"/><stop offset="1" stop-color="#475569"/></linearGradient>
+</defs>
+<style>
+.base{fill:#fff;stroke:#d0d7de}.h{fill:#6e7781}.s{fill:#1f2328}.t{fill:#424a53}.dot{fill:#8c959f}.chip{fill:#f6f8fa;stroke:#d0d7de}
+@media (prefers-color-scheme:dark){.base{fill:#0d1117;stroke:#30363d}.h{fill:#848d97}.s{fill:#f0f6fc}.t{fill:#c9d1d9}.chip{fill:#161b22;stroke:#30363d}}
+.ray{stroke:#f59e0b;stroke-width:2.5;stroke-linecap:round}.drop{stroke:#3b82f6;stroke-width:2.5;stroke-linecap:round}.bolt{fill:#facc15}
+.spin{transform-box:fill-box;transform-origin:center;animation:spin 24s linear infinite}
+.float{animation:float 6s ease-in-out infinite}.drop{animation:fall 1.2s linear infinite}.bolt{animation:flash 4s infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes float{50%{transform:translateX(2px)}}
+@keyframes fall{0%{transform:translateY(-3px);opacity:0}30%{opacity:1}100%{transform:translateY(3px);opacity:0}}
+@keyframes flash{0%,86%,92%,100%{opacity:1}89%{opacity:.15}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+<rect class="base" x="0.5" y="0.5" width="181" height="27" rx="14"/>
+<rect x="0.5" y="0.5" width="181" height="27" rx="14" fill="url(#tint)"/>
+<g transform="translate(4 3) scale(0.46)"><path d="M14 34h22a8 8 0 0 0 0-16 11 11 0 0 0-21-2 7 7 0 0 0-1 18z" fill="url(#storm)"/><path class="bolt" d="M26 33l-6 9h5l-3 7 9-11h-5l3-5z"/></g>
+<g font-family="system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+<text class="s" x="30" y="18.5" font-size="12" font-weight="650" textLength="49" lengthAdjust="spacingAndGlyphs">Orageux</text>
+<circle class="dot" cx="84.5" cy="14" r="1.5"/>
+<text class="t" x="90" y="18.5" font-size="12" textLength="80" lengthAdjust="spacingAndGlyphs">2 PR bloquées</text>
+</g>
+</svg>

@@ -9,9 +9,18 @@ inputs:
   token:
     description: Jeton GitHub (lecture des issues, PR et runs ; écriture du badge si commit est activé).
     default: ${{ github.token }}
+  repo:
+    description: Dépôt décrit par le badge, sous la forme propriétaire/nom (par défaut, celui qui exécute le workflow). Le badge est committé dans le dépôt qui exécute le workflow.
+    required: false
   path:
     description: Chemin du badge SVG dans le dépôt.
     default: .github/repo-weather.svg
+  style:
+    description: Style du badge (card pour la carte complète, pill pour une pastille de 28 px).
+    default: card
+  messages:
+    description: "Raisons personnalisées, une ligne par météo (sunny, cloudy, rainy, stormy), par exemple « stormy: {blocked} PR à débloquer ». Variables : {issues}, {blocked}, {ci}."
+    required: false
   stale-days:
     description: Jours sans activité après lesquels une PR ouverte compte comme bloquée.
     default: '14'
@@ -40,6 +49,8 @@ inputs:
 outputs:
   weather:
     description: Météo calculée (sunny, cloudy, rainy ou stormy).
+  phrase:
+    description: Bulletin en une ligne, par exemple « Orageux : 2 PR bloquées ».
   path:
     description: Chemin du fichier SVG généré.
   changed:

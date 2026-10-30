@@ -1,7 +1,18 @@
 import { appendFileSync } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname } from 'node:path';
-import { LANGS, THEMES, ciState, commitMessage, countBlocked, pickWeather, renderSvg } from './weather.js';
+import {
+  LANGS,
+  STYLES,
+  THEMES,
+  ciState,
+  commitMessage,
+  countBlocked,
+  parseMessages,
+  phrase,
+  pickWeather,
+  renderSvg,
+} from './weather.js';
 
 const input = (name, fallback) => process.env[`INPUT_${name.toUpperCase()}`]?.trim() || fallback;
 
@@ -18,6 +29,7 @@ function number(name, fallback) {
 }
 
 const token = input('token');
+// Le badge est toujours committé dans le dépôt qui exécute le workflow, même quand il décrit un autre dépôt.
 const [owner, repo] = process.env.GITHUB_REPOSITORY.split('/');
 const api = process.env.GITHUB_API_URL ?? 'https://api.github.com';
 
@@ -53,22 +65,28 @@ async function main() {
   const theme = oneOf('theme', 'auto', THEMES);
   const animated = oneOf('animated', 'true', ['true', 'false']) === 'true';
   const commit = oneOf('commit', 'true', ['true', 'false']) === 'true';
+  const style = oneOf('style', 'card', STYLES);
+  const messages = parseMessages(input('messages', ''));
+  const target = input('repo', process.env.GITHUB_REPOSITORY);
+  if (!/^[\w.-]+\/[\w.-]+$/.test(target)) throw new Error(`Le paramètre "repo" doit être de la forme propriétaire/nom, reçu : "${target}"`);
+  const [targetOwner, targetName] = target.split('/');
+  const isSelf = target.toLowerCase() === process.env.GITHUB_REPOSITORY.toLowerCase();
 
   const { data, errors } = await gh(process.env.GITHUB_GRAPHQL_URL ?? `${api}/graphql`, {
     method: 'POST',
-    body: JSON.stringify({ query: QUERY, variables: { owner, name: repo } }),
+    body: JSON.stringify({ query: QUERY, variables: { owner: targetOwner, name: targetName } }),
   });
   if (errors) throw new Error(errors.map((e) => e.message).join('; '));
   const repository = data.repository;
   const defaultBranch = repository.defaultBranchRef?.name;
-  if (!defaultBranch) throw new Error("Le dépôt n'a pas encore de branche par défaut (dépôt vide ?)");
+  if (!defaultBranch) throw new Error(`Le dépôt ${target} n'a pas encore de branche par défaut (dépôt vide ?)`);
 
   const { workflow_runs: runs } = await gh(
-    `/repos/${owner}/${repo}/actions/runs?branch=${encodeURIComponent(defaultBranch)}&exclude_pull_requests=true&per_page=100`,
+    `/repos/${target}/actions/runs?branch=${encodeURIComponent(defaultBranch)}&exclude_pull_requests=true&per_page=100`,
   );
   // Le workflow qui exécute l'Action ne doit pas se juger lui-même : il est encore en cours, ou bouclerait sur son propre résultat.
-  const ownPath = process.env.GITHUB_WORKFLOW_REF?.split('@')[0].slice(`${owner}/${repo}/`.length);
-  const others = runs.filter((run) => run.path !== ownPath && String(run.id) !== process.env.GITHUB_RUN_ID);
+  const ownPath = isSelf ? process.env.GITHUB_WORKFLOW_REF?.split('@')[0].slice(`${owner}/${repo}/`.length) : undefined;
+  const others = runs.filter((run) => !isSelf || (run.path !== ownPath && String(run.id) !== process.env.GITHUB_RUN_ID));
 
   const stats = {
     ci: ciState(others),
@@ -77,14 +95,16 @@ async function main() {
     blocked: countBlocked(repository.pullRequests.nodes, staleDays, Date.now()),
   };
   const weather = pickWeather(stats, issuesThreshold);
-  const svg = renderSvg(weather, stats, { lang, theme, animated });
-  console.log(`Météo : ${weather}`, stats);
+  const svg = renderSvg(weather, stats, { lang, style, theme, animated, messages });
+  const bulletin = phrase(weather, stats, { lang, messages });
+  console.log(`Météo de ${target} : ${bulletin}`, stats);
 
   await mkdir(dirname(path), { recursive: true });
   await writeFile(path, svg);
-  const changed = commit && (await commitBadge(path, svg, commitMessage(weather, lang), defaultBranch));
+  const ownBranch = isSelf ? defaultBranch : (await gh(`/repos/${owner}/${repo}`)).default_branch;
+  const changed = commit && (await commitBadge(path, svg, commitMessage(weather, lang), ownBranch));
   if (process.env.GITHUB_OUTPUT) {
-    appendFileSync(process.env.GITHUB_OUTPUT, `weather=${weather}\npath=${path}\nchanged=${changed}\n`);
+    appendFileSync(process.env.GITHUB_OUTPUT, `weather=${weather}\nphrase=${bulletin}\npath=${path}\nchanged=${changed}\n`);
   }
 }
 

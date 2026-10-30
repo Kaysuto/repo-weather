@@ -14,6 +14,10 @@ Le badge suit le thème clair ou sombre de GitHub. Les icônes sont légèrement
 | --- | --- |
 | ![Orageux, thème sombre](examples/stormy-dark.svg) | ![Rainy, static](examples/rainy-static-en.svg) |
 
+Le style `pill` donne une pastille de 28 px, à placer à côté d'un titre ou dans une rangée de badges :
+
+![Ensoleillé](examples/pill-sunny.svg) ![Orageux](examples/pill-stormy.svg) ![Nuageux, message personnalisé](examples/pill-message.svg)
+
 ## Comment la météo est calculée
 
 La condition la plus grave l'emporte :
@@ -85,7 +89,10 @@ Pour choisir toi-même l'image affichée en mode clair et en mode sombre, génè
 | Nom | Défaut | Description |
 | --- | --- | --- |
 | `token` | `github.token` | Jeton utilisé pour lire le dépôt et committer le badge |
+| `repo` | le dépôt courant | Dépôt décrit par le badge (`propriétaire/nom`) |
 | `path` | `.github/repo-weather.svg` | Chemin du badge dans le dépôt |
+| `style` | `card` | `card` pour la carte complète, `pill` pour une pastille de 28 px |
+| `messages` | — | Raisons personnalisées, une ligne par météo (voir ci-dessous) |
 | `stale-days` | `14` | Jours sans activité avant qu'une PR compte comme bloquée |
 | `issues-threshold` | `0` | Issues ouvertes tolérées avant le temps nuageux |
 | `lang` | `fr` | Langue du badge : `fr` ou `en` |
@@ -95,7 +102,33 @@ Pour choisir toi-même l'image affichée en mode clair et en mode sombre, génè
 | `commit-message` | selon la météo | Message du commit du badge |
 | `branch` | branche par défaut | Branche où committer le badge |
 
-Sorties : `weather` (`sunny`, `cloudy`, `rainy`, `stormy`), `path` et `changed` (`true` si le badge a été committé).
+Sorties : `weather` (`sunny`, `cloudy`, `rainy`, `stormy`), `phrase` (bulletin en une ligne, par exemple « Orageux : 2 PR bloquées »), `path` et `changed` (`true` si le badge a été committé).
+
+### Messages personnalisés
+
+La raison affichée par la pastille et la sortie `phrase` peuvent être remplacées, météo par météo. `{issues}`, `{blocked}` et `{ci}` sont remplacés par les valeurs du dépôt :
+
+```yaml
+      - uses: Kaysuto/repo-weather@v1
+        with:
+          style: pill
+          messages: |
+            stormy: {blocked} PR à débloquer
+            cloudy: {issues} issues à trier
+```
+
+### Météo d'un autre dépôt
+
+Avec `repo: propriétaire/nom`, le badge décrit un autre dépôt mais reste committé dans celui qui exécute le workflow. Pour un dépôt privé, passe un jeton personnel dans `token` : le jeton par défaut ne peut lire que les dépôts publics et le tien.
+
+## Versions
+
+| Référence | Signification |
+| --- | --- |
+| `@v1` | Dernière version 1.x, mise à jour à chaque version |
+| `@v1.1.0` | Exactement cette version, figée |
+
+Les changements de chaque version sont listés dans les [releases](https://github.com/Kaysuto/repo-weather/releases).
 
 ## Limites
 
