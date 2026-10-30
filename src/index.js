@@ -1,9 +1,15 @@
 import { appendFileSync } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname } from 'node:path';
-import { LANGS, ciState, commitMessage, countBlocked, pickWeather, renderSvg } from './weather.js';
+import { LANGS, THEMES, ciState, commitMessage, countBlocked, pickWeather, renderSvg } from './weather.js';
 
 const input = (name, fallback) => process.env[`INPUT_${name.toUpperCase()}`]?.trim() || fallback;
+
+function oneOf(name, fallback, values) {
+  const value = input(name, fallback);
+  if (!values.includes(value)) throw new Error(`Le paramètre "${name}" doit valoir : ${values.join(', ')}`);
+  return value;
+}
 
 function number(name, fallback) {
   const value = Number(input(name, fallback));
@@ -12,11 +18,6 @@ function number(name, fallback) {
 }
 
 const token = input('token');
-const path = input('path', '.github/repo-weather.svg').replace(/^\.\//, '');
-const staleDays = number('stale-days', '14');
-const issuesThreshold = number('issues-threshold', '0');
-const lang = input('lang', 'fr');
-const commit = input('commit', 'true') === 'true';
 const [owner, repo] = process.env.GITHUB_REPOSITORY.split('/');
 const api = process.env.GITHUB_API_URL ?? 'https://api.github.com';
 
@@ -45,7 +46,13 @@ const QUERY = `query($owner: String!, $name: String!) {
 
 async function main() {
   if (!token) throw new Error('Le paramètre "token" est vide');
-  if (!LANGS.includes(lang)) throw new Error(`Le paramètre "lang" doit valoir : ${LANGS.join(', ')}`);
+  const path = input('path', '.github/repo-weather.svg').replace(/^\.\//, '');
+  const staleDays = number('stale-days', '14');
+  const issuesThreshold = number('issues-threshold', '0');
+  const lang = oneOf('lang', 'fr', LANGS);
+  const theme = oneOf('theme', 'auto', THEMES);
+  const animated = oneOf('animated', 'true', ['true', 'false']) === 'true';
+  const commit = oneOf('commit', 'true', ['true', 'false']) === 'true';
 
   const { data, errors } = await gh(process.env.GITHUB_GRAPHQL_URL ?? `${api}/graphql`, {
     method: 'POST',
@@ -70,27 +77,31 @@ async function main() {
     blocked: countBlocked(repository.pullRequests.nodes, staleDays, Date.now()),
   };
   const weather = pickWeather(stats, issuesThreshold);
-  const svg = renderSvg(weather, stats, lang);
+  const svg = renderSvg(weather, stats, { lang, theme, animated });
   console.log(`Météo : ${weather}`, stats);
 
   await mkdir(dirname(path), { recursive: true });
   await writeFile(path, svg);
-  if (process.env.GITHUB_OUTPUT) appendFileSync(process.env.GITHUB_OUTPUT, `weather=${weather}\npath=${path}\n`);
-  if (!commit) return;
+  const changed = commit && (await commitBadge(path, svg, commitMessage(weather, lang), defaultBranch));
+  if (process.env.GITHUB_OUTPUT) {
+    appendFileSync(process.env.GITHUB_OUTPUT, `weather=${weather}\npath=${path}\nchanged=${changed}\n`);
+  }
+}
 
+/** Committe le badge s'il a changé. Renvoie true si un commit a été fait. */
+async function commitBadge(path, svg, defaultMessage, defaultBranch) {
   const branch = input('branch', defaultBranch);
   const file = `/repos/${owner}/${repo}/contents/${path.split('/').map(encodeURIComponent).join('/')}`;
   const current = await gh(`${file}?ref=${encodeURIComponent(branch)}`, { allow404: true });
   const content = Buffer.from(svg).toString('base64');
   if (current?.content?.replace(/\n/g, '') === content) {
     console.log('Badge inchangé, rien à committer');
-    return;
+    return false;
   }
-  await gh(file, {
-    method: 'PUT',
-    body: JSON.stringify({ message: commitMessage(weather, lang), content, branch, sha: current?.sha }),
-  });
+  const message = input('commit-message', defaultMessage);
+  await gh(file, { method: 'PUT', body: JSON.stringify({ message, content, branch, sha: current?.sha }) });
   console.log(`${path} committé sur ${branch}`);
+  return true;
 }
 
 main().catch((error) => {

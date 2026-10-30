@@ -1,16 +1,10 @@
-// Régénère les aperçus de badges affichés dans le README : npm run examples
+// Régénère les badges de référence (README et tests) : npm run examples
 import { mkdir, writeFile } from 'node:fs/promises';
 import { renderSvg } from '../src/weather.js';
-
-const samples = {
-  sunny: { ci: 'passing', issues: 0, blocked: 0 },
-  cloudy: { ci: 'passing', issues: 4, blocked: 0 },
-  rainy: { ci: 'failing', issues: 4, blocked: 0 },
-  stormy: { ci: 'failing', issues: 4, blocked: 2 },
-};
+import { CASES } from './cases.js';
 
 await mkdir('examples', { recursive: true });
-for (const [weather, stats] of Object.entries(samples)) {
-  await writeFile(`examples/${weather}.svg`, renderSvg(weather, stats));
+for (const { file, weather, stats, options } of CASES) {
+  await writeFile(`examples/${file}`, renderSvg(weather, stats, options));
 }
-console.log(`${Object.keys(samples).length} badges écrits dans examples/`);
+console.log(`${CASES.length} badges écrits dans examples/`);

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="353" height="84" viewBox="0 0 353 84" role="img" aria-label="Repo weather : Rainy — CI failing · 12 issues · 0 blocked PRs">
+<title>Repo weather : Rainy — CI failing · 12 issues · 0 blocked PRs</title>
+<defs>
+<linearGradient id="tint" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b82f6" stop-opacity="0.22"/><stop offset="0.7" stop-color="#3b82f6" stop-opacity="0"/></linearGradient>
+<radialGradient id="sun" cx="0.35" cy="0.35" r="0.75"><stop offset="0" stop-color="#fde68a"/><stop offset="1" stop-color="#f59e0b"/></radialGradient>
+<linearGradient id="cloud" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f1f5f9"/><stop offset="1" stop-color="#94a3b8"/></linearGradient>
+<linearGradient id="storm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#94a3b8"/><stop offset="1" stop-color="#475569"/></linearGradient>
+</defs>
+<style>
+.base{fill:#fff;stroke:#d0d7de}.h{fill:#6e7781}.s{fill:#1f2328}.t{fill:#424a53}.chip{fill:#f6f8fa;stroke:#d0d7de}
+@media (prefers-color-scheme:dark){.base{fill:#0d1117;stroke:#30363d}.h{fill:#848d97}.s{fill:#f0f6fc}.t{fill:#c9d1d9}.chip{fill:#161b22;stroke:#30363d}}
+.ray{stroke:#f59e0b;stroke-width:2.5;stroke-linecap:round}.drop{stroke:#3b82f6;stroke-width:2.5;stroke-linecap:round}.bolt{fill:#facc15}
+</style>
+<rect class="base" x="0.5" y="0.5" width="352" height="83" rx="14"/>
+<rect x="0.5" y="0.5" width="352" height="83" rx="14" fill="url(#tint)"/>
+<rect x="14" y="18" width="48" height="48" rx="12" fill="#3b82f6" fill-opacity="0.16"/>
+<g transform="translate(20 24) scale(0.75)"><path d="M14 34h22a8 8 0 0 0 0-16 11 11 0 0 0-21-2 7 7 0 0 0-1 18z" fill="url(#cloud)"/><path class="drop" style="animation-delay:0s" d="M17 38l-2 6"/><path class="drop" style="animation-delay:0.4s" d="M25 38l-2 6"/><path class="drop" style="animation-delay:0.8s" d="M33 38l-2 6"/></g>
+<g font-family="system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+<text class="h" x="76" y="24" font-size="10" font-weight="600" textLength="95" lengthAdjust="spacing">REPO WEATHER</text>
+<text class="s" x="76" y="43" font-size="17" font-weight="650" textLength="48" lengthAdjust="spacingAndGlyphs">Rainy</text>
+<g transform="translate(76 52)"><rect class="chip" x="0.5" y="0.5" width="74" height="19" rx="9.5"/><circle cx="11" cy="10" r="3.5" fill="#cf222e"/><text class="t" x="20" y="14" font-size="11" textLength="49" lengthAdjust="spacingAndGlyphs">CI failing</text></g><g transform="translate(157 52)"><rect class="chip" x="0.5" y="0.5" width="74" height="19" rx="9.5"/><circle cx="11" cy="10" r="3.5" fill="#d4a72c"/><text class="t" x="20" y="14" font-size="11" textLength="49" lengthAdjust="spacingAndGlyphs">12 issues</text></g><g transform="translate(238 52)"><rect class="chip" x="0.5" y="0.5" width="98" height="19" rx="9.5"/><circle cx="11" cy="10" r="3.5" fill="#1f883d"/><text class="t" x="20" y="14" font-size="11" textLength="73" lengthAdjust="spacingAndGlyphs">0 blocked PRs</text></g>
+</g>
+</svg>

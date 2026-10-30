@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import { test } from 'node:test';
+import { CASES } from '../scripts/cases.js';
 import { ciState, commitMessage, countBlocked, pickWeather, renderSvg } from '../src/weather.js';
 
 const run = (workflow_id, conclusion, status = 'completed') => ({ workflow_id, conclusion, status });
@@ -43,8 +45,8 @@ test('renderSvg : libellés, pluriels et langues', () => {
   assert.match(svg, /^<svg /);
   assert.match(svg, /Orageux/);
   assert.match(svg, /CI en échec · 1 issue · 2 PR bloquées/);
-  assert.match(renderSvg('sunny', { ci: 'passing', issues: 0, blocked: 0 }, 'en'), /CI passing · 0 issues · 0 blocked PRs/);
-  assert.throws(() => renderSvg('sunny', { ci: 'none', issues: 0, blocked: 0 }, 'de'), /Langue inconnue/);
+  assert.match(renderSvg('sunny', { ci: 'passing', issues: 0, blocked: 0 }, { lang: 'en' }), /CI passing · 0 issues · 0 blocked PRs/);
+  assert.throws(() => renderSvg('sunny', { ci: 'none', issues: 0, blocked: 0 }, { lang: 'de' }), /Langue inconnue/);
 });
 
 /** Pastilles du badge : position, largeur, couleur du point, texte et largeur imposée au texte. */
@@ -82,7 +84,7 @@ test('renderSvg : tout le texte tient dans le badge, quelle que soit la longueur
     ['cloudy', { ci: 'none', issues: 7, blocked: 0 }, 'en'],
   ];
   for (const [weather, stats, lang] of cases) {
-    const svg = renderSvg(weather, stats, lang);
+    const svg = renderSvg(weather, stats, { lang });
     const width = svgWidth(svg);
     const all = chips(svg);
     assert.equal(all.length, 3, `${weather}/${lang} : 3 pastilles`);
@@ -118,4 +120,29 @@ test('renderSvg : animations par météo, coupées si le lecteur réduit les ani
 test('commitMessage : suit la langue du badge', () => {
   assert.equal(commitMessage('stormy'), 'chore: météo du dépôt, orageux [skip ci]');
   assert.equal(commitMessage('sunny', 'en'), 'chore: repo weather, sunny [skip ci]');
+});
+
+test('renderSvg : thème forcé et version sans animation', () => {
+  const stats = { ci: 'passing', issues: 0, blocked: 0 };
+  const auto = renderSvg('sunny', stats);
+  const dark = renderSvg('sunny', stats, { theme: 'dark' });
+  const light = renderSvg('sunny', stats, { theme: 'light' });
+  assert.match(auto, /prefers-color-scheme:dark/);
+  assert.doesNotMatch(dark, /prefers-color-scheme/);
+  assert.ok(dark.includes('.base{fill:#0d1117'));
+  assert.doesNotMatch(light, /prefers-color-scheme/);
+  assert.ok(light.includes('.base{fill:#fff'));
+  assert.throws(() => renderSvg('sunny', stats, { theme: 'sepia' }), /Thème inconnu/);
+  for (const weather of ['sunny', 'cloudy', 'rainy', 'stormy']) {
+    const svg = renderSvg(weather, stats, { animated: false });
+    assert.doesNotMatch(svg, /animation:|@keyframes/, `${weather} statique`);
+  }
+});
+
+test('badges de référence : identiques octet par octet (npm run examples pour les régénérer)', async () => {
+  for (const { file, weather, stats, options } of CASES) {
+    // Git peut convertir les fins de ligne sous Windows.
+    const expected = (await readFile(new URL(`../examples/${file}`, import.meta.url), 'utf8')).replace(/\r\n/g, '\n');
+    assert.equal(renderSvg(weather, stats, options), expected, file);
+  }
 });

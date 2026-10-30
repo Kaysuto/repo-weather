@@ -8,6 +8,7 @@
 </defs>
 <style>
 .base{fill:#fff;stroke:#d0d7de}.h{fill:#6e7781}.s{fill:#1f2328}.t{fill:#424a53}.chip{fill:#f6f8fa;stroke:#d0d7de}
+@media (prefers-color-scheme:dark){.base{fill:#0d1117;stroke:#30363d}.h{fill:#848d97}.s{fill:#f0f6fc}.t{fill:#c9d1d9}.chip{fill:#161b22;stroke:#30363d}}
 .ray{stroke:#f59e0b;stroke-width:2.5;stroke-linecap:round}.drop{stroke:#3b82f6;stroke-width:2.5;stroke-linecap:round}.bolt{fill:#facc15}
 .spin{transform-box:fill-box;transform-origin:center;animation:spin 24s linear infinite}
 .float{animation:float 6s ease-in-out infinite}.drop{animation:fall 1.2s linear infinite}.bolt{animation:flash 4s infinite}
@@ -16,7 +17,6 @@
 @keyframes fall{0%{transform:translateY(-3px);opacity:0}30%{opacity:1}100%{transform:translateY(3px);opacity:0}}
 @keyframes flash{0%,86%,92%,100%{opacity:1}89%{opacity:.15}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
-@media (prefers-color-scheme:dark){.base{fill:#0d1117;stroke:#30363d}.h{fill:#848d97}.s{fill:#f0f6fc}.t{fill:#c9d1d9}.chip{fill:#161b22;stroke:#30363d}}
 </style>
 <rect class="base" x="0.5" y="0.5" width="321" height="83" rx="14"/>
 <rect x="0.5" y="0.5" width="321" height="83" rx="14" fill="url(#tint)"/>

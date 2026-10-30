@@ -10,6 +10,10 @@ Une GitHub Action qui transforme l'état de ton dépôt en bulletin météo, sou
 
 Le badge suit le thème clair ou sombre de GitHub. Les icônes sont légèrement animées (soleil qui tourne, pluie qui tombe, éclairs), sauf si le lecteur a demandé à réduire les animations.
 
+| Thème sombre forcé (`theme: dark`) | Statique, en anglais (`animated: false`, `lang: en`) |
+| --- | --- |
+| ![Orageux, thème sombre](examples/stormy-dark.svg) | ![Rainy, static](examples/rainy-static-en.svg) |
+
 ## Comment la météo est calculée
 
 La condition la plus grave l'emporte :
@@ -65,6 +69,17 @@ Puis ajoute le badge à ton README :
 
 L'Action committe le badge seulement quand il change, avec `[skip ci]` dans le message.
 
+GitHub met les images en cache : si le badge semble en retard après un run, ajoute un paramètre à l'URL pour forcer le rechargement (`.github/repo-weather.svg?v=2`).
+
+### Une image par thème
+
+Pour choisir toi-même l'image affichée en mode clair et en mode sombre, génère deux badges avec `theme: light` et `theme: dark`, puis utilise les suffixes de GitHub :
+
+```markdown
+![Météo du dépôt](.github/repo-weather-light.svg#gh-light-mode-only)
+![Météo du dépôt](.github/repo-weather-dark.svg#gh-dark-mode-only)
+```
+
 ## Paramètres
 
 | Nom | Défaut | Description |
@@ -74,10 +89,13 @@ L'Action committe le badge seulement quand il change, avec `[skip ci]` dans le m
 | `stale-days` | `14` | Jours sans activité avant qu'une PR compte comme bloquée |
 | `issues-threshold` | `0` | Issues ouvertes tolérées avant le temps nuageux |
 | `lang` | `fr` | Langue du badge : `fr` ou `en` |
+| `theme` | `auto` | `auto` suit le thème du lecteur, `light` ou `dark` le forcent |
+| `animated` | `true` | `false` pour un SVG sans animation |
 | `commit` | `true` | `false` pour seulement écrire le fichier (à publier toi-même) |
+| `commit-message` | selon la météo | Message du commit du badge |
 | `branch` | branche par défaut | Branche où committer le badge |
 
-Sorties : `weather` (`sunny`, `cloudy`, `rainy`, `stormy`) et `path`.
+Sorties : `weather` (`sunny`, `cloudy`, `rainy`, `stormy`), `path` et `changed` (`true` si le badge a été committé).
 
 ## Limites
 
@@ -91,6 +109,8 @@ Aucune dépendance, Node 24 suffit :
 ```bash
 npm test
 ```
+
+Les badges de `examples/` servent de référence : les tests vérifient que le rendu leur est identique octet par octet. Après une modification volontaire du design, régénère-les :
 
 ```bash
 npm run examples

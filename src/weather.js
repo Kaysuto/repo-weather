@@ -94,7 +94,7 @@ function textWidth(text, size, bold = false) {
     if (/[il.,:;'!|· ]/.test(c)) em += 0.28;
     else if (/[jtfr()-]/.test(c)) em += 0.33;
     else if (/[mwMW]/.test(c)) em += 0.83;
-    else if (/d/.test(c)) em += 0.56;
+    else if (/\d/.test(c)) em += 0.56;
     else if (c !== c.toLowerCase()) em += 0.67;
     else em += 0.55;
   }
@@ -104,9 +104,26 @@ function textWidth(text, size, bold = false) {
 const fit = (text, size, bold, adjust = 'spacingAndGlyphs') =>
   `textLength="${textWidth(text, size, bold)}" lengthAdjust="${adjust}"`;
 
-export function renderSvg(weather, stats, lang = 'fr') {
+const LIGHT = '.base{fill:#fff;stroke:#d0d7de}.h{fill:#6e7781}.s{fill:#1f2328}.t{fill:#424a53}.chip{fill:#f6f8fa;stroke:#d0d7de}';
+const DARK = '.base{fill:#0d1117;stroke:#30363d}.h{fill:#848d97}.s{fill:#f0f6fc}.t{fill:#c9d1d9}.chip{fill:#161b22;stroke:#30363d}';
+const THEME_CSS = { auto: `${LIGHT}
+@media (prefers-color-scheme:dark){${DARK}}`, light: LIGHT, dark: DARK };
+export const THEMES = Object.keys(THEME_CSS);
+
+const ANIMATION_CSS = `.spin{transform-box:fill-box;transform-origin:center;animation:spin 24s linear infinite}
+.float{animation:float 6s ease-in-out infinite}.drop{animation:fall 1.2s linear infinite}.bolt{animation:flash 4s infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes float{50%{transform:translateX(2px)}}
+@keyframes fall{0%{transform:translateY(-3px);opacity:0}30%{opacity:1}100%{transform:translateY(3px);opacity:0}}
+@keyframes flash{0%,86%,92%,100%{opacity:1}89%{opacity:.15}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+`;
+
+/** theme : auto (suit le lecteur), light ou dark (forcé). animated : false donne un SVG sans aucune animation. */
+export function renderSvg(weather, stats, { lang = 'fr', theme = 'auto', animated = true } = {}) {
   const t = TEXT[lang];
   if (!t) throw new Error(`Langue inconnue "${lang}", valeurs possibles : ${LANGS.join(', ')}`);
+  if (!THEME_CSS[theme]) throw new Error(`Thème inconnu "${theme}", valeurs possibles : ${THEMES.join(', ')}`);
   const state = t.weather[weather];
   const title = t.title.toUpperCase();
   const chips = [
@@ -137,17 +154,9 @@ export function renderSvg(weather, stats, lang = 'fr') {
 <linearGradient id="storm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#94a3b8"/><stop offset="1" stop-color="#475569"/></linearGradient>
 </defs>
 <style>
-.base{fill:#fff;stroke:#d0d7de}.h{fill:#6e7781}.s{fill:#1f2328}.t{fill:#424a53}.chip{fill:#f6f8fa;stroke:#d0d7de}
+${THEME_CSS[theme]}
 .ray{stroke:#f59e0b;stroke-width:2.5;stroke-linecap:round}.drop{stroke:#3b82f6;stroke-width:2.5;stroke-linecap:round}.bolt{fill:#facc15}
-.spin{transform-box:fill-box;transform-origin:center;animation:spin 24s linear infinite}
-.float{animation:float 6s ease-in-out infinite}.drop{animation:fall 1.2s linear infinite}.bolt{animation:flash 4s infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-@keyframes float{50%{transform:translateX(2px)}}
-@keyframes fall{0%{transform:translateY(-3px);opacity:0}30%{opacity:1}100%{transform:translateY(3px);opacity:0}}
-@keyframes flash{0%,86%,92%,100%{opacity:1}89%{opacity:.15}}
-@media (prefers-reduced-motion:reduce){*{animation:none!important}}
-@media (prefers-color-scheme:dark){.base{fill:#0d1117;stroke:#30363d}.h{fill:#848d97}.s{fill:#f0f6fc}.t{fill:#c9d1d9}.chip{fill:#161b22;stroke:#30363d}}
-</style>
+${animated ? ANIMATION_CSS : ''}</style>
 <rect class="base" x="0.5" y="0.5" width="${width - 1}" height="83" rx="14"/>
 <rect x="0.5" y="0.5" width="${width - 1}" height="83" rx="14" fill="url(#tint)"/>
 <rect x="14" y="18" width="48" height="48" rx="12" fill="${accent}" fill-opacity="0.16"/>
