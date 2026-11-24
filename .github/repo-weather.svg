@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="316" height="84" viewBox="0 0 316 84" role="img" aria-label="Météo du dépôt : Ensoleillé — CI ok · 0 issue · 0 PR bloquée">
-<title>Météo du dépôt : Ensoleillé — CI ok · 0 issue · 0 PR bloquée</title>
+<svg xmlns="http://www.w3.org/2000/svg" width="338" height="84" viewBox="0 0 338 84" role="img" aria-label="Météo du dépôt : Ensoleillé — pas de CI · 0 issue · 0 PR bloquée">
+<title>Météo du dépôt : Ensoleillé — pas de CI · 0 issue · 0 PR bloquée</title>
 <defs>
 <linearGradient id="tint" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f59e0b" stop-opacity="0.22"/><stop offset="0.7" stop-color="#f59e0b" stop-opacity="0"/></linearGradient>
 <radialGradient id="sun" cx="0.35" cy="0.35" r="0.75"><stop offset="0" stop-color="#fde68a"/><stop offset="1" stop-color="#f59e0b"/></radialGradient>
@@ -18,13 +18,13 @@
 @keyframes flash{0%,86%,92%,100%{opacity:1}89%{opacity:.15}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
 </style>
-<rect class="base" x="0.5" y="0.5" width="315" height="83" rx="14"/>
-<rect x="0.5" y="0.5" width="315" height="83" rx="14" fill="url(#tint)"/>
+<rect class="base" x="0.5" y="0.5" width="337" height="83" rx="14"/>
+<rect x="0.5" y="0.5" width="337" height="83" rx="14" fill="url(#tint)"/>
 <rect x="14" y="18" width="48" height="48" rx="12" fill="#f59e0b" fill-opacity="0.16"/>
 <g transform="translate(20 24) scale(0.75)"><path class="ray spin" d="M37.0 24.0L42.0 24.0M33.2 33.2L36.7 36.7M24.0 37.0L24.0 42.0M14.8 33.2L11.3 36.7M11.0 24.0L6.0 24.0M14.8 14.8L11.3 11.3M24.0 11.0L24.0 6.0M33.2 14.8L36.7 11.3"/><circle cx="24" cy="24" r="9" fill="url(#sun)"/></g>
 <g font-family="system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
 <text class="h" x="76" y="24" font-size="10" font-weight="600" textLength="107" lengthAdjust="spacing">MÉTÉO DU DÉPÔT</text>
 <text class="s" x="76" y="43" font-size="17" font-weight="650" textLength="84" lengthAdjust="spacingAndGlyphs">Ensoleillé</text>
-<g transform="translate(76 52)"><rect class="chip" x="0.5" y="0.5" width="55" height="19" rx="9.5"/><circle cx="11" cy="10" r="3.5" fill="#1f883d"/><text class="t" x="20" y="14" font-size="11" textLength="30" lengthAdjust="spacingAndGlyphs">CI ok</text></g><g transform="translate(138 52)"><rect class="chip" x="0.5" y="0.5" width="62" height="19" rx="9.5"/><circle cx="11" cy="10" r="3.5" fill="#1f883d"/><text class="t" x="20" y="14" font-size="11" textLength="37" lengthAdjust="spacingAndGlyphs">0 issue</text></g><g transform="translate(207 52)"><rect class="chip" x="0.5" y="0.5" width="92" height="19" rx="9.5"/><circle cx="11" cy="10" r="3.5" fill="#1f883d"/><text class="t" x="20" y="14" font-size="11" textLength="67" lengthAdjust="spacingAndGlyphs">0 PR bloquée</text></g>
+<g transform="translate(76 52)"><rect class="chip" x="0.5" y="0.5" width="77" height="19" rx="9.5"/><circle cx="11" cy="10" r="3.5" fill="#8c959f"/><text class="t" x="20" y="14" font-size="11" textLength="52" lengthAdjust="spacingAndGlyphs">pas de CI</text></g><g transform="translate(160 52)"><rect class="chip" x="0.5" y="0.5" width="62" height="19" rx="9.5"/><circle cx="11" cy="10" r="3.5" fill="#1f883d"/><text class="t" x="20" y="14" font-size="11" textLength="37" lengthAdjust="spacingAndGlyphs">0 issue</text></g><g transform="translate(229 52)"><rect class="chip" x="0.5" y="0.5" width="92" height="19" rx="9.5"/><circle cx="11" cy="10" r="3.5" fill="#1f883d"/><text class="t" x="20" y="14" font-size="11" textLength="67" lengthAdjust="spacingAndGlyphs">0 PR bloquée</text></g>
 </g>
 </svg>
